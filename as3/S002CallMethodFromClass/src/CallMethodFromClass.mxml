@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:client="com.plter.jr.client.*">
+
+	<fx:Script>
+		<![CDATA[
+			import com.plter.jr.client.JRServerEvent;
+			
+			import mx.controls.Alert;
+			protected function btn_clickHandler(event:MouseEvent):void
+			{
+				server.HelloClass.sayHello();
+			}
+
+			protected function server_ajpFaultHandler(event:JRServerEvent):void
+			{
+				Alert.show(event.toString());
+			}
+
+
+			protected function server_ajpResultHandler(event:JRServerEvent):void
+			{
+				outTxt.appendText("Server response: "+event.result+"\n");
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		
+		<client:JRServer id="server"
+						   url="http://localhost:8080/S002ClassServer/index.jsp"
+						   jrFault="server_ajpFaultHandler(event)"
+						   jrResult="server_ajpResultHandler(event)"/>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<s:Button id="btn" label="Call HelloClass.sayHello" click="btn_clickHandler(event)"/>
+	<s:TextArea width="100%" height="100%" id="outTxt" editable="false"/>
+</s:Application>
